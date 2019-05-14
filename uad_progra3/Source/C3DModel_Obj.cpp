@@ -510,10 +510,12 @@ bool C3DModel_Obj::readMtllib(std::string mtlLibFilename, std::string &materialN
 		}
 
 		// For now, only read the first material
+		
 		if (readTextureName)
 		{
 			break;
 		}
+		
 	}
 
 	infile.close();

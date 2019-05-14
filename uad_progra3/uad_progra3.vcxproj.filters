@@ -141,6 +141,15 @@
     <ClInclude Include="Include\CAppGeometricFigures.h">
       <Filter>Header Files\App</Filter>
     </ClInclude>
+    <ClInclude Include="Esfera.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Icosaedro.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -201,6 +210,15 @@
       <Filter>Source Files\App</Filter>
     </ClCompile>
     <ClCompile Include="Source\CAppGeometricFigures.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Esfera.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Icosaedro.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp">
       <Filter>Source Files\App</Filter>
     </ClCompile>
   </ItemGroup>

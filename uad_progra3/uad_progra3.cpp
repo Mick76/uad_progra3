@@ -12,11 +12,15 @@ using namespace std;
 #include "Include/CAppObjLoader.h"
 #include "Include/CAppGeometricFigures.h"
 #include "Include/CAppEmpty.h"
+#include "Esfera.h"
+#include "Torus.h"
+#include "Icosaedro.h"
 
 int main()
 {
 	CApp *app = NULL;                  // Pointer to BASE class CApp
-	app = new CAppEmpty(800, 600);  // Using pointer to base class, create a new object of DERIVED class
+	//Aqui cambie por Torus, Icosaedro o Esfera
+	app = new Torus(800, 600);  // Using pointer to base class, create a new object of DERIVED class
 	app->run();                        // Run the app
 	delete app;                        // Delete pointer
 	app = NULL;                        // Set pointer to NULL

@@ -54,7 +54,6 @@ void CGameMenu::render(COpenGLRenderer * const renderer)
 		if (menuItem != NULL)
 		{
 			menuItem->getColor()->getColorfv(color);
-
 			renderer->renderMenuItem(
 				&m_shaderProgramId,
 				&m_textureObjectId,
@@ -74,7 +73,6 @@ void CGameMenu::render(COpenGLRenderer * const renderer)
 				if (menuItem != NULL)
 				{
 					menuItem->getColor()->getColorfv(color);
-
 					renderer->renderMenuItem(
 						&m_shaderProgramId,
 						&m_textureObjectId,
