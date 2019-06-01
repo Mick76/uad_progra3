@@ -17,7 +17,7 @@ private:
 	bool parseObjLine(													// Parse line
 		std::string line,								  
 		bool countOnly, 
-		int lineNumber); 
+		int lineNumber, bool &startAdded);
 	bool readMtllib(													// Read mtllib
 		std::string mtlLibFilename,
 		std::string &materialName, 

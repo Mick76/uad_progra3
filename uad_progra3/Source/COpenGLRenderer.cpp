@@ -858,6 +858,119 @@ bool COpenGLRenderer::renderObject(
 	return false;
 }
 
+bool COpenGLRenderer::renderObjectSection(unsigned int * shaderProgramId, unsigned int * vertexArrayObjectId, unsigned int * textureObjectId, int numFaces, GLfloat * objectColor, int start, int end, MathHelper::Matrix4 * objectTransformation, EPRIMITIVE_MODE mode, bool drawIndexedPrimitives)
+{
+	if (m_windowWidth > 0
+		&& m_windowHeight > 0
+		&& vertexArrayObjectId != NULL
+		&& *vertexArrayObjectId > 0
+		&& numFaces > 0
+		&& objectColor != NULL
+		&& !m_OpenGLError)
+	{
+		if (!useShaderProgram(shaderProgramId))
+		{
+			cout << "ERROR: Cannot use shader program id: " << *shaderProgramId << endl;
+			m_OpenGLError = true;
+			glUseProgram(0);
+			return false;
+		}
+
+		COpenGLShaderProgram* shaderProgramWrapper = getShaderProgramWrapper(*shaderProgramId);
+		if (shaderProgramWrapper == nullptr)
+		{
+			cout << "ERROR: Could not find shader program wrapper for shader program id: " << *shaderProgramId << endl;
+			return false;
+		}
+
+		GLenum drawingPrimitiveMode = primitiveModeToGLEnum(mode);
+
+		// Bind vertex array object for this 3D object
+		glBindVertexArray((GLuint)*vertexArrayObjectId);
+
+		// ====== Update Model View Projection matrices and pass them to the shader====================================
+		// This needs to be done per-frame because the values change over time
+		if (shaderProgramWrapper->getModelMatrixUniformLocation() >= 0)
+		{
+			if (objectTransformation == NULL)
+			{
+				MathHelper::Matrix4 modelMatrix = MathHelper::SimpleModelMatrix(0.0f);
+				glUniformMatrix4fv(shaderProgramWrapper->getModelMatrixUniformLocation(), 1, GL_FALSE, &(modelMatrix.m[0][0]));
+			}
+			else
+			{
+				glUniformMatrix4fv(shaderProgramWrapper->getModelMatrixUniformLocation(), 1, GL_FALSE, &(objectTransformation->m[0][0]));
+			}
+		}
+
+		if (shaderProgramWrapper->getViewMatrixUniformLocation() >= 0)
+		{
+			MathHelper::Matrix4 viewMatrix = MathHelper::SimpleViewMatrix(m_cameraDistance);
+			glUniformMatrix4fv(shaderProgramWrapper->getViewMatrixUniformLocation(), 1, GL_FALSE, &(viewMatrix.m[0][0]));
+		}
+
+		if (shaderProgramWrapper->getProjectionMatrixUniformLocation() >= 0)
+		{
+			MathHelper::Matrix4 projectionMatrix = MathHelper::SimpleProjectionMatrix(float(m_windowWidth) / float(m_windowHeight));
+			glUniformMatrix4fv(shaderProgramWrapper->getProjectionMatrixUniformLocation(), 1, GL_FALSE, &(projectionMatrix.m[0][0]));
+		}
+
+		if (shaderProgramWrapper->getColorUniformLocation() >= 0)
+		{
+			glUniform3f(shaderProgramWrapper->getColorUniformLocation(), objectColor[0], objectColor[1], objectColor[2]);
+		}
+
+		// Set the texture sampler uniform
+		if (textureObjectId != nullptr && shaderProgramWrapper->getTextureSamplerUniformLocation() >= 0 && *textureObjectId > 0)
+		{
+			// DO NOT CALL glEnable(GL_TEXTURE_2D) OR OPENGL WILL RETURN AN "1280" ERROR
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, *textureObjectId);
+			glUniform1i(shaderProgramWrapper->getTextureSamplerUniformLocation(), 0);
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+		if (drawIndexedPrimitives)
+		{
+			glDrawElements(
+				drawingPrimitiveMode,
+				end,			// Number of indices
+				GL_UNSIGNED_SHORT,		// Data type
+				&start);
+
+			// Check for OpenGL errors
+			m_OpenGLError = checkOpenGLError("glDrawElements()");
+		}
+		else
+		{
+			// Draw
+			glDrawArrays(
+				drawingPrimitiveMode,
+				start,
+				end - start 
+			);
+
+			// Check for OpenGL errors
+			m_OpenGLError = checkOpenGLError("glDrawArrays()");
+		}
+
+		// Unbind vertex array object
+		glBindVertexArray(0);
+
+		// Unbind shader program
+		glUseProgram(0);
+
+		if (!m_OpenGLError)
+			return true;
+	}
+
+	return false;
+}
+
 /*
 */
 bool COpenGLRenderer::renderMenuItem(

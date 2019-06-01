@@ -252,16 +252,42 @@ void CAppObjLoader::render()
 			// Get a matrix that has both the object rotation and translation
 			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
 
+			/*
 			getOpenGLRenderer()->renderObject(
 				m_p3DModel->getShaderProgramId(),
 				m_p3DModel->getGraphicsMemoryObjectId(),
-				m_p3DModel->getTextureObjectId(),
+				&m_p3DModel->getTextureObjectId(),
 				m_p3DModel->getNumFaces(),
 				color,
 				&modelMatrix,
 				COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
 				false
 			);
+			*/
+
+			m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.push_back(m_p3DModel->getNumFaces()*3);//Poner el final del ultimo rango del ultimo material abierto
+
+			
+			for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)//por cada material
+			{
+				for (int m = 0; m < m_p3DModel->objectMaterials[matN].inicio.size(); m++)//por cada rango
+				{
+					getOpenGLRenderer()->renderObjectSection(
+						m_p3DModel->getShaderProgramId(),
+						m_p3DModel->getGraphicsMemoryObjectId(),
+						&m_p3DModel->objectMaterials[matN].materialtextureId,
+						m_p3DModel->getNumFaces(),
+						color,
+						m_p3DModel->objectMaterials[matN].inicio[m],
+						m_p3DModel->objectMaterials[matN].final[m],
+						&modelMatrix,
+						COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
+						false
+					);
+					
+				}
+			}
+			
 		}
 	}
 }
@@ -302,16 +328,29 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 			vertexShaderToLoad = VERTEX_SHADER_TEXTURED_3D_OBJECT;
 			fragmentShaderToLoad = FRAGMENT_SHADER_TEXTURED_3D_OBJECT;
 
-			unsigned int newTextureID = 0;
+			/*
+			POR CADA MATERIAL QUE ENCONTRO EN LOAD() HACER UN ID Y P3DMODEL DEBE TENER UN VECTOR DE ID DE TEXTURA
+			*/
+			for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)
+			{
+				unsigned int newTextureID = 0;
 
-			// LOAD TEXTURE AND ALSO CREATE TEXTURE OBJECT
-			if (loadTexture(m_p3DModel->getTextureFilename(), &newTextureID))
-			{
-				m_p3DModel->setTextureObjectId(newTextureID);
-			}
-			else
-			{
-				return false;
+				// LOAD TEXTURE AND ALSO CREATE TEXTURE OBJECT
+				string s = m_p3DModel->objectMaterials[matN].targaName;
+				
+				char *cstr = new char [s.size() +1];
+				strcpy(cstr, s.c_str());
+
+				if (loadTexture(cstr, &newTextureID))
+				{
+					m_p3DModel->setTextureObjectId(newTextureID);
+
+					m_p3DModel->objectMaterials[matN].materialtextureId = newTextureID;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 

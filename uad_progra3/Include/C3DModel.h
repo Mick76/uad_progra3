@@ -19,6 +19,15 @@ using namespace std;
 // 
 // ========================================================================================================================================
 
+struct Material
+{
+	string materialName;
+	string targaName;
+	vector<int> inicio;
+	vector<int> final;
+	unsigned int materialtextureId;
+};
+
 class C3DModel
 {
 protected:
@@ -99,6 +108,10 @@ public:
 	bool hasTextures() const { return m_modelHasTextures; }
 
 	const char * const getTextureFilename() const { return m_modelTextureFilename; }
+
+	////MATERIAL//////////////
+	vector<Material> objectMaterials;
+	int currentMaterial = 0;
 };
 
 #endif // !C3DMODEL_H

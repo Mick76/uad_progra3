@@ -195,6 +195,19 @@ public:
 		EPRIMITIVE_MODE mode = TRIANGLES,
 		bool drawIndexedPrimitives = false);
 
+
+	// 
+	bool renderObjectSection(
+		unsigned int *shaderProgramId,
+		unsigned int *vertexArrayObjectId,
+		unsigned int *textureObjectId,
+		int numFaces,
+		GLfloat *objectColor,
+		int start, int end,
+		MathHelper::Matrix4 *objectTransformation = NULL,
+		EPRIMITIVE_MODE mode = TRIANGLES,
+		bool drawIndexedPrimitives = false);
+
 	//
 	bool renderMenuItem(
 		unsigned int *shaderProgramId, 

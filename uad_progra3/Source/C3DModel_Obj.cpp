@@ -146,12 +146,14 @@ bool C3DModel_Obj::readObjFile(const char * filename, bool countOnly)
 
 	infile.open(filename);
 
+	bool startAdded = false;
+
 	while (!infile.eof())
 	{
 		getline(infile, lineBuffer);
 		lineNumber++;
 
-		if (!(this->parseObjLine(lineBuffer, countOnly, lineNumber)))
+		if (!(this->parseObjLine(lineBuffer, countOnly, lineNumber, startAdded)))
 		{
 			readFileOk = false;
 			break;
@@ -170,7 +172,7 @@ bool C3DModel_Obj::readObjFile(const char * filename, bool countOnly)
  * TO-DO...
  * Also, this reads files with triangles, not quads. This is also a TO-DO...
  */
-bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber)
+bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber, bool &canAdd)
 {
 	bool parsed = false;
 	bool unrecognizedLine = false;
@@ -180,6 +182,7 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 	bool readingUV = false;
 	bool readingFace = false;
 	bool readingTexture = false;
+	bool readingUseMat = false;
 
 	char *nextToken = NULL;
 	char *token = NULL;
@@ -258,6 +261,10 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 			{
 				readingTexture = true;
 			}
+			else if (0 == strcmp(token, "usemtl"))
+			{
+				readingUseMat = true;
+			}
 			else
 			{
 				// Unrecognized line
@@ -285,6 +292,26 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 		// Read next token
 		token = strtok_s(NULL, delimiterToken, &nextToken);
 		currentToken++;
+
+		if (readingUseMat && !countOnly && token != NULL)
+		{
+			for (int matN = 0; matN < objectMaterials.size(); matN++)
+			{
+				if (objectMaterials[matN].inicio.size() > objectMaterials[matN].final.size())
+				{
+					objectMaterials[matN].final.push_back(m_currentFace);
+				}
+
+				if (objectMaterials[matN].materialName == token)
+				{
+					currentMaterial = matN;
+					objectMaterials[matN].inicio.push_back(m_currentFace);
+				}
+
+				
+			}
+			parsed = true;
+		}
 
 		// No more tokens
 		if (token == NULL)
@@ -404,6 +431,7 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 									case 0:
 										// Indices in .obj format start at 1, but our arrays start from index 0
 										m_vertexIndices[m_currentFace + i] = (unsigned short)(atoi(token)) - 1;
+
 										break;
 									case 1:
 										// Indices in .obj format start at 1, but our arrays start from index 0
@@ -460,6 +488,7 @@ bool C3DModel_Obj::readMtllib(std::string mtlLibFilename, std::string &materialN
 	bool readingMaterialName = false;
 	bool readingMaterialFilename = false;
 	int numToken = 0;
+	int materialCount = 0;
 
 	materialName.clear();
 	materialFilename.clear();
@@ -495,11 +524,22 @@ bool C3DModel_Obj::readMtllib(std::string mtlLibFilename, std::string &materialN
 			{
 				if (readingMaterialName)
 				{
-					materialName.append(token);
+					materialCount++;
+					objectMaterials.resize(materialCount);
+					objectMaterials[materialCount - 1].materialName = token;
+
+					if (materialCount == 1)
+					{
+						materialName.append(token);
+					}
 				}
 				else if (readingMaterialFilename)
 				{
-					materialFilename.append(token);
+					objectMaterials[materialCount - 1].targaName = token;
+					if (materialCount == 1)
+					{
+						materialFilename.append(token);
+					}
 					readTextureName = true;
 					break;
 				}
@@ -513,7 +553,7 @@ bool C3DModel_Obj::readMtllib(std::string mtlLibFilename, std::string &materialN
 		
 		if (readTextureName)
 		{
-			break;
+			//break;
 		}
 		
 	}

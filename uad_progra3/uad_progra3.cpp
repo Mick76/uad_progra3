@@ -20,7 +20,7 @@ int main()
 {
 	CApp *app = NULL;                  // Pointer to BASE class CApp
 	//Aqui cambie por Torus, Icosaedro o Esfera
-	app = new Torus(800, 600);  // Using pointer to base class, create a new object of DERIVED class
+	app = new CAppObjLoader(800, 600);  // Using pointer to base class, create a new object of DERIVED class
 	app->run();                        // Run the app
 	delete app;                        // Delete pointer
 	app = NULL;                        // Set pointer to NULL
