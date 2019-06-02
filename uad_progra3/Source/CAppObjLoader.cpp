@@ -265,9 +265,6 @@ void CAppObjLoader::render()
 			);
 			*/
 
-			m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.push_back(m_p3DModel->getNumFaces()*3);//Poner el final del ultimo rango del ultimo material abierto
-
-			
 			for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)//por cada material
 			{
 				for (int m = 0; m < m_p3DModel->objectMaterials[matN].inicio.size(); m++)//por cada rango
@@ -337,22 +334,48 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 
 				// LOAD TEXTURE AND ALSO CREATE TEXTURE OBJECT
 				string s = m_p3DModel->objectMaterials[matN].targaName;
-				
-				char *cstr = new char [s.size() +1];
-				strcpy(cstr, s.c_str());
 
-				if (loadTexture(cstr, &newTextureID))
+				if (m_p3DModel->objectMaterials[matN].targaName != "") //si un material si tiene textura, cargar textura
 				{
-					m_p3DModel->setTextureObjectId(newTextureID);
+					char *cstr = new char[s.size() + 1];
+					strcpy(cstr, s.c_str());
 
-					m_p3DModel->objectMaterials[matN].materialtextureId = newTextureID;
+					if (loadTexture(cstr, &newTextureID))
+					{
+						m_p3DModel->setTextureObjectId(newTextureID);
+
+						m_p3DModel->objectMaterials[matN].materialtextureId = newTextureID;
+					}
+					else
+					{
+						return false;
+					}
 				}
-				else
+				else //si no tiene textura darle el indice default 0
 				{
-					return false;
+					m_p3DModel->setTextureObjectId(0);
+					m_p3DModel->objectMaterials[matN].materialtextureId = 0;
 				}
 			}
 		}
+
+		//Poner el final del ultimo rango de indices que usan una textura del ultimo material abierto
+		if (m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.size() != m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].inicio.size())
+		{
+			m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.push_back(m_p3DModel->getNumFaces() * 3);
+		}
+
+		
+		//si no tiene textura eliminar ese material.
+		for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)
+		{
+			if (m_p3DModel->objectMaterials[matN].targaName == "")
+			{
+				m_p3DModel->objectMaterials.erase(m_p3DModel->objectMaterials.begin() + matN);
+				matN--;
+			}
+		}
+		
 
 		// TO-DO (IMPROVMENT): LOAD ALL POSSIBLE SHADERS FOR 3D OBJECT UP FRONT AND THEN JUST SWITCH THE ACTIVE ONE
 
@@ -462,11 +485,11 @@ void CAppObjLoader::onF3(int mods)
 	// Check BITWISE AND to detect shift/alt/ctrl
 	if (mods & KEY_MOD_SHIFT)
 	{
-		moveCamera(-1.0f);
+		moveCamera(-3.0f);
 	}
 	else
 	{
-		moveCamera(1.0f);
+		moveCamera(3.0f);
 	}
 }
 
