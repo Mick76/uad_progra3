@@ -343,7 +343,8 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 			//  If we're NOT in "count only" mode
 			if (!countOnly)
 			{
-				//MEDIDA TEMPORAL, EL LAMBORGINI EN vt SOLO TENIA 2 DE TRES TOKENS, ASI QUE LE FALTA VA EL TERCERO EL CUAL SUELE SER 0
+				//En caso de que solo haya encontrado 3 tokens en mientras lee vt
+				//agregar un 0.0000 al vector de tokens y incrementar current token para asi cumplir con los expected tokens
 				if (line[0] == 'v' && line[1] == 't' && currentToken == 3)
 				{
 					line.push_back('\0');
@@ -421,7 +422,7 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 						// token[1] = 3/5/2
 						// token[2] = 2/3/1
 
-						vector<string> tokens2 = tokens;
+						vector<string> tokensBuffer = tokens;
 
 						for (int i = 0; i < 3 && i < tokens.size(); i++)
 						{
@@ -486,18 +487,17 @@ bool C3DModel_Obj::parseObjLine(std::string line, bool countOnly, int lineNumber
 						token = NULL;
 						nextToken = NULL;
 
-
-						//////////////////////////QUADS
+						//Hacer segunda cara para quads
 						if (isQuad)
 						{
 							int e = -1;
-							for (int i = 0; i < 3 && i < tokens2.size(); i++)
+							for (int i = 0; i < 3 && i < tokensBuffer.size(); i++)
 							{
 								e++;
 								currentToken = -1;
 
 								// Get group of indices and split it into tokens with '/' as delimiter
-								token = strtok_s((char *)tokens2[e].c_str(), delimiterFace, &nextToken);
+								token = strtok_s((char *)tokensBuffer[e].c_str(), delimiterFace, &nextToken);
 
 								while (nextToken != NULL && *nextToken != '\0')
 								{
@@ -639,8 +639,8 @@ bool C3DModel_Obj::readMtllib(std::string mtlLibFilename, std::string &materialN
 				if (readingMaterialName)
 				{
 					materialCount++;
-					objectMaterials.resize(materialCount);
-					objectMaterials[materialCount - 1].materialName = token;
+					objectMaterials.resize(materialCount);//hacer el vectro de materiales del tamano de la cantidad de materiales encontrados
+					objectMaterials[materialCount - 1].materialName = token;//asignarle el nombre del material
 
 					if (materialCount == 1)
 					{

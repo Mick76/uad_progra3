@@ -252,19 +252,6 @@ void CAppObjLoader::render()
 			// Get a matrix that has both the object rotation and translation
 			MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
 
-			/*
-			getOpenGLRenderer()->renderObject(
-				m_p3DModel->getShaderProgramId(),
-				m_p3DModel->getGraphicsMemoryObjectId(),
-				&m_p3DModel->getTextureObjectId(),
-				m_p3DModel->getNumFaces(),
-				color,
-				&modelMatrix,
-				COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
-				false
-			);
-			*/
-
 			for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)//por cada material
 			{
 				for (int m = 0; m < m_p3DModel->objectMaterials[matN].inicio.size(); m++)//por cada rango
@@ -325,9 +312,9 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 			vertexShaderToLoad = VERTEX_SHADER_TEXTURED_3D_OBJECT;
 			fragmentShaderToLoad = FRAGMENT_SHADER_TEXTURED_3D_OBJECT;
 
-			/*
-			POR CADA MATERIAL QUE ENCONTRO EN LOAD() HACER UN ID Y P3DMODEL DEBE TENER UN VECTOR DE ID DE TEXTURA
-			*/
+			
+			//POR CADA MATERIAL QUE ENCONTRO EN LOAD() HACER UN ID PARA ESE MATERIAL
+			
 			for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)
 			{
 				unsigned int newTextureID = 0;
@@ -353,13 +340,12 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 				}
 				else //si no tiene textura darle el indice default 0
 				{
-					m_p3DModel->setTextureObjectId(0);
 					m_p3DModel->objectMaterials[matN].materialtextureId = 0;
 				}
 			}
 		}
 
-		//Poner el final del ultimo rango de indices que usan una textura del ultimo material abierto
+		//cERRAR EL ULTIMO RANGO ABIERTO DE CARAS QUE USAN UN MATERIAL
 		if (m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.size() != m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].inicio.size())
 		{
 			m_p3DModel->objectMaterials[m_p3DModel->currentMaterial].final.push_back(m_p3DModel->getNumFaces() * 3);
@@ -367,6 +353,7 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 
 		
 		//si no tiene textura eliminar ese material.
+
 		for (int matN = 0; matN < m_p3DModel->objectMaterials.size(); matN++)
 		{
 			if (m_p3DModel->objectMaterials[matN].targaName == "")

@@ -270,8 +270,8 @@ void Torus::createTorusGeometry()
 	bool loaded = false;
 	float v1[3], v2[3], v3[3], v1v2[3], v1v3[3], norm[3];
 
-	const int aros = 50;
-	const int verticesCircle = 50;//vertices por circulo
+	const int aros = 32;
+	const int verticesCircle = 32;//vertices por circulo
 	const int verticesTotales = verticesCircle * aros;//vertices totales
 	const int carasCircle = verticesCircle; // vertices * canitidad de aros
 	const int carasTotales = verticesCircle * aros * 2; // vertices * canitidad de aros

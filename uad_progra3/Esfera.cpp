@@ -270,8 +270,8 @@ void Esfera::createSphereGeometry()
 	bool loaded = false;
 	float v1[3], v2[3], v3[3], v1v2[3], v1v3[3], norm[3];
 
-	const int aros = 60;
-	const int verticesCircle = 60;//vertices por circulo
+	const int aros = 10;
+	const int verticesCircle = 10;//vertices por circulo
 	const int verticesTotales = verticesCircle * aros;//vertices totales
 	const int carasCircle = verticesCircle; // vertices * canitidad de aros
 	const int carasTotales = verticesCircle * aros * 2; // vertices * canitidad de aros
