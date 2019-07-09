@@ -1,0 +1,7 @@
+﻿{
+	"HexGrid" : {
+		"numCols" : 12,
+		"numRows" : 12,
+		"cellSize" : 0.7
+	}
+}

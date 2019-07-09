@@ -10,6 +10,9 @@
 #include "MathHelper.h"
 #include "COpenGLShaderProgram.h"
 
+#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\CVector3DLL.h"
+#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\MathHelperDLL.h"
+
 #include <map>
 #include <vector>
 using namespace std;
@@ -221,10 +224,12 @@ public:
 
 	//
 	void renderColorCube(MathHelper::Matrix4 *objectTransformation = NULL);
+	void renderColorCubeDLL(MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//DLL
 	void initializeColorCube();
 
 	//
 	void renderTexturedCube(unsigned int cubeTextureID, MathHelper::Matrix4 *objectTransformation = NULL);
+	void renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//dll
 	void initializeTexturedCube();
 
 	//

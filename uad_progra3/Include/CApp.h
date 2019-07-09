@@ -6,6 +6,7 @@
 #include "CGameWindow.h"
 #include "CGameMenu.h"
 #include "COpenGLRenderer.h"
+#include "C3DModel_Obj.h"
 
 #define KEY_MOD_SHIFT     0x0001
 #define KEY_MOD_CONTROL   0x0002
@@ -74,6 +75,7 @@ public:
 	virtual void update(double delta_time) = 0;
 	virtual void run()    = 0;
 	virtual void render() = 0;
+	virtual C3DModel * getObject();
 
 protected:
 	virtual bool initializeMenu() = 0;

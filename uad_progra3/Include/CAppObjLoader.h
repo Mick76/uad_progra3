@@ -76,11 +76,15 @@ public:
 	void onF2(int mods);
 	void onF3(int mods);
 
+	C3DModel * getObject();
+	void openObjFile(bool unloadPrevious);
+
+
 private:
 
 	// Load/unload 3D model
-	bool load3DModel(const char * const filename);
 	void unloadCurrent3DModel();
+	bool load3DModel(const char * const filename, bool unloadPrevious);
 
 	// Move camera away/closer
 	void moveCamera(float direction);

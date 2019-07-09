@@ -44,6 +44,32 @@ namespace MathHelper
 			           0.0f,   0.0f, 0.0f,   1.0f);
 	}
 
+	inline static Matrix4 MatrixMult(Matrix4 m1, Matrix4 m2)
+	{
+		float r[4][4];
+		float mult = 0.0f;
+		int t = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			mult = 0.0f;
+			for (int j = 0; j < 4; j++)
+			{
+				mult += m1.m[i][j] * m2.m[j][i];
+			}
+
+			r[i][t] = mult;
+			t++;
+
+		}
+
+		return Matrix4(
+		r[0][0], r[0][1], r[0][2], r[0][3],
+		r[1][0], r[1][1], r[1][2], r[1][3],
+		r[2][0], r[2][1], r[2][2], r[2][3],
+		r[3][0], r[3][1], r[3][2], r[3][3]
+		);
+	}
+
 	// Rotate around Y + Translate
 	inline static Matrix4 ModelMatrix(float angleInRadians, CVector3 translation)
 	{

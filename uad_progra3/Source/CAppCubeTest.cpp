@@ -12,6 +12,9 @@ using namespace std;
 #include "../Include/C3DModel.h"
 #include "../Include/CWideStringHelper.h"
 
+#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\CVector3DLL.h"
+#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\MathHelperDLL.h"
+
 /* */
 CAppCubeTest::CAppCubeTest() :
 	CAppCubeTest(CGameWindow::DEFAULT_WINDOW_WIDTH, CGameWindow::DEFAULT_WINDOW_HEIGHT) // C++11 ability to call one constructor from another
@@ -134,26 +137,53 @@ void CAppCubeTest::update(double deltaTime)
 	}
 }
 
+//typedef MathHelper::Matrix4(MathHelper::Matrix4::*f_indetityMatrix)();
+
 /* */
 void CAppCubeTest::render()
 {
-	CVector3 objPos2;
+	//HINSTANCE hInst = LoadLibrary(L"D:\\Visual_Studio_Projects\\Progra3MathDLL\\Debug\\Progra3MathDLL.dll");
+	//f_indetityMatrix fptr = (f_indetityMatrix)GetProcAddress(hInst, "MathHelperDLL::Matrix4DLL::IdentityMatrix");
+
+	CVector3DLL objPos2;
 	objPos2.setValues(m_objectPosition.getX() + 2.5f, m_objectPosition.getY(), m_objectPosition.getZ());
 
 	// convert total degrees rotated to radians;
 	double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
-	// Get a matrix that has both the object rotation and translation
-	MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+	MathHelperDLL::Matrix4DLL sc = MathHelperDLL::IdentityMatrix();
+	sc.m[0][0] = 0.25f;
+	sc.m[1][1] = 0.25f;
+	sc.m[2][2] = 0.25f;
 
-	CVector3 pos2 = m_objectPosition;
-	pos2 += CVector3(3.0f, 0.0f, 0.0f);
-	MathHelper::Matrix4 modelMatrix2 = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, pos2);
+	MathHelperDLL::Matrix4DLL tr = MathHelperDLL::IdentityMatrix();
+	sc.m[3][0] = m_objectPosition.X;
+	sc.m[3][1] = m_objectPosition.Y;
+	sc.m[3][2] = m_objectPosition.Z;
+
+	MathHelperDLL::Matrix4DLL rx = MathHelperDLL::IdentityMatrix();
+	float cosine = cosf(totalDegreesRotatedRadians);
+	float sine = sinf(totalDegreesRotatedRadians);
+
+	sc.m[3][0] = m_objectPosition.X;
+	sc.m[3][1] = m_objectPosition.Y;
+	sc.m[3][2] = m_objectPosition.Z;
+
+	// Get a matrix that has both the object rotation and translation
+	MathHelperDLL::Matrix4DLL modelMatrix = MathHelperDLL::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+
+	CVector3DLL pos2 = m_objectPosition;
+	pos2 += CVector3DLL(3.0f, 0.0f, 0.0f);
+	MathHelperDLL::Matrix4DLL modelMatrix2 = MathHelperDLL::ModelMatrix((float)totalDegreesRotatedRadians, pos2);
 
 	// No model loaded, show test cubes
-	getOpenGLRenderer()->renderColorCube(&modelMatrix);
-	getOpenGLRenderer()->renderTexturedCube(m_texturedCubeTextureID, &modelMatrix2);
+	getOpenGLRenderer()->renderColorCubeDLL(&modelMatrix);
+	getOpenGLRenderer()->renderTexturedCubeDLL(m_texturedCubeTextureID, &modelMatrix2);
 }
+
+/*
+
+*/
 
 /* */
 void CAppCubeTest::onMouseMove(float deltaX, float deltaY)

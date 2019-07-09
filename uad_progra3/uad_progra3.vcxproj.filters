@@ -150,6 +150,18 @@
     <ClInclude Include="Torus.h">
       <Filter>Header Files\App</Filter>
     </ClInclude>
+    <ClInclude Include="CAppFullGrid.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="CGrid.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="CGridCell.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="CObjectInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -220,6 +232,18 @@
     </ClCompile>
     <ClCompile Include="Source\C3DModel.cpp">
       <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="CAppFullGrid.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="CGrid.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="CGridCell.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="CObjectInstance.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

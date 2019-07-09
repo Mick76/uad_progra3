@@ -277,7 +277,7 @@ void CAppObjLoader::render()
 }
 
 /* */
-bool CAppObjLoader::load3DModel(const char * const filename)
+bool CAppObjLoader::load3DModel(const char * const filename, bool unloadPrevious)
 {
 	std::wstring wresourceFilenameVS;
 	std::wstring wresourceFilenameFS;
@@ -288,7 +288,10 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 	char *fragmentShaderToLoad = FRAGMENT_SHADER_3D_OBJECT;
 
 	// Unload any current 3D model
-	unloadCurrent3DModel();
+	if (unloadPrevious)
+	{
+		unloadCurrent3DModel();
+	}
 
 	// Create new 3D object
 	m_p3DModel = C3DModel::load(filename);
@@ -414,6 +417,35 @@ bool CAppObjLoader::load3DModel(const char * const filename)
 	return loaded;
 }
 
+void CAppObjLoader::openObjFile(bool unloadPrevious)
+{
+	std::wstring wideStringBuffer = L"";
+	wideStringBuffer.resize(MAX_PATH);
+
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFilter = L" Obj Files\0*.obj\0 Stl Files\0*.stl\0 3DS Files\0*.3ds\0 All files\0*.*\0";
+	ofn.lpstrFile = &wideStringBuffer[0];
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = L"Select a model file";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+
+	if (GetOpenFileName(&ofn))
+	{
+		int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), NULL, 0, NULL, NULL);
+		std::string multibyteString(size_needed, 0);
+		WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), &multibyteString[0], size_needed, NULL, NULL);
+		cout << "Filename to load: " << multibyteString.c_str() << endl;
+
+		if (!load3DModel(multibyteString.c_str(), unloadPrevious))
+		{
+			cout << "Unable to load 3D model" << endl;
+		}
+	}
+}
+
 /* */
 void CAppObjLoader::unloadCurrent3DModel()
 {
@@ -459,7 +491,7 @@ void CAppObjLoader::onF2(int mods)
 		WideCharToMultiByte(CP_UTF8, 0, &wideStringBuffer[0], (int)wideStringBuffer.size(), &multibyteString[0], size_needed, NULL, NULL);
 		cout << "Filename to load: " << multibyteString.c_str() << endl;
 
-		if (!load3DModel(multibyteString.c_str()))
+		if (!load3DModel(multibyteString.c_str(), true))
 		{
 			cout << "Unable to load 3D model" << endl;
 		}
@@ -478,6 +510,11 @@ void CAppObjLoader::onF3(int mods)
 	{
 		moveCamera(3.0f);
 	}
+}
+
+C3DModel * CAppObjLoader::getObject()
+{
+	return m_p3DModel;
 }
 
 /* */

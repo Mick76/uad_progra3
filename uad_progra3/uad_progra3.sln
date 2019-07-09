@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uad_progra3", "uad_progra3.vcxproj", "{F58BF2A2-ABA5-4E15-9DB3-8FD831AD2DE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{72FA90E3-4A85-4D2F-AE9B-8BFE013E3AF8}"
+	ProjectSection(SolutionItems) = preProject
+		D:\Visual_Studio_Projects\Progra3MathDLL\x64\Debug\Progra3MathDLL.lib = D:\Visual_Studio_Projects\Progra3MathDLL\x64\Debug\Progra3MathDLL.lib
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB53844A-6099-4EC6-BD4A-F26581AC6A86}
 	EndGlobalSection
 EndGlobal

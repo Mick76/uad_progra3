@@ -152,6 +152,11 @@ void CApp::selectPrevMenuItem()
 	}
 }
 
+C3DModel * CApp::getObject()
+{
+	return nullptr;
+}
+
 /* Read texture file and generate an OpenGL texture object */
 bool CApp::loadTexture(const char *filename, unsigned int *newTextureID)
 {

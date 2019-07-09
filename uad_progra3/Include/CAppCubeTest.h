@@ -34,7 +34,7 @@ private:
 	double m_rotationSpeed;
 
 	// Current object position
-	CVector3 m_objectPosition;
+	CVector3DLL m_objectPosition;
 
 	// -----------------------------------------------------------------
 	
