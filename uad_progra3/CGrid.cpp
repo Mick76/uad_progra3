@@ -23,13 +23,27 @@ void CGrid::initialize()
 	{
 		for (int column = 0; column < m_columns; column++)
 		{
-			if (row % 2 == 0)
+			if (m_orientation == "flat")
 			{
-				m_cells.push_back(CGridCell(-1, CVector3(w * column, 0, h * row), column, row, false));
+				if (column % 2 == 0)
+				{
+					m_cells.push_back(CGridCell(-1, CVector3(h * column, 0, w * row), column, row, false));
+				}
+				else
+				{
+					m_cells.push_back(CGridCell(-1, CVector3(h*column, 0, w * row + (w *0.5f)), column, row, false));
+				}
 			}
 			else
 			{
-				m_cells.push_back(CGridCell(-1, CVector3(w*column + (w * 0.5), 0, h * row), column, row, false));
+				if (row % 2 == 0)
+				{
+					m_cells.push_back(CGridCell(-1, CVector3(w * column, 0, h * row), column, row, false));
+				}
+				else
+				{
+					m_cells.push_back(CGridCell(-1, CVector3(w*column + (w * 0.5), 0, h * row), column, row, false));
+				}
 			}
 		}
 	}
@@ -37,9 +51,19 @@ void CGrid::initialize()
 	int x = 0;
 	for (int i = 0; i < 18; i += 3)
 	{
-		vData[i] = m_sizeHex * cosf(M_PI / 180 * (60 * x - 30));
-		vData[i + 1] = 0;
-		vData[i + 2] = m_sizeHex * sinf(M_PI / 180 * (60 * x - 30));
+		if (m_orientation == "pointy")
+		{
+			vData[i] = m_sizeHex * cosf(M_PI / 180 * (60 * x - 30));
+			vData[i + 1] = 0;
+			vData[i + 2] = m_sizeHex * sinf(M_PI / 180 * (60 * x - 30));
+		}
+		else
+		{
+			vData[i] = m_sizeHex * cosf(M_PI / 180 * (60 * x));
+			vData[i + 1] = 0;
+			vData[i + 2] = m_sizeHex * sinf(M_PI / 180 * (60 * x));
+		}
+		
 		x++;
 	}
 

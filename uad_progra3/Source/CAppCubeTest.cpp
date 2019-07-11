@@ -142,6 +142,7 @@ void CAppCubeTest::update(double deltaTime)
 /* */
 void CAppCubeTest::render()
 {
+	/*
 	//HINSTANCE hInst = LoadLibrary(L"D:\\Visual_Studio_Projects\\Progra3MathDLL\\Debug\\Progra3MathDLL.dll");
 	//f_indetityMatrix fptr = (f_indetityMatrix)GetProcAddress(hInst, "MathHelperDLL::Matrix4DLL::IdentityMatrix");
 
@@ -179,6 +180,7 @@ void CAppCubeTest::render()
 	// No model loaded, show test cubes
 	getOpenGLRenderer()->renderColorCubeDLL(&modelMatrix);
 	getOpenGLRenderer()->renderTexturedCubeDLL(m_texturedCubeTextureID, &modelMatrix2);
+	*/
 }
 
 /*

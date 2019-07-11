@@ -1540,7 +1540,7 @@ void COpenGLRenderer::renderColorCube(MathHelper::Matrix4 *objectTransformation)
 	}
 }
 
-
+/*
 void COpenGLRenderer::renderColorCubeDLL(MathHelperDLL::Matrix4DLL * objectTransformation)
 {
 	if (m_windowWidth > 0
@@ -1615,7 +1615,7 @@ void COpenGLRenderer::renderColorCubeDLL(MathHelperDLL::Matrix4DLL * objectTrans
 		glUseProgram(0);
 	}
 }
-
+*/
 
 /*
 */
@@ -1708,7 +1708,7 @@ void COpenGLRenderer::renderTexturedCube(unsigned int cubeTextureID, MathHelper:
 	}
 }
 
-
+/*
 void COpenGLRenderer::renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelperDLL::Matrix4DLL * objectTransformation)
 {
 	if (m_windowWidth > 0
@@ -1797,7 +1797,7 @@ void COpenGLRenderer::renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelp
 		glUseProgram(0);
 	}
 }
-
+*/
 
 
 /*

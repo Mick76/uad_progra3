@@ -1,7 +1,8 @@
 ﻿{
 	"HexGrid" : {
-		"numCols" : 12,
-		"numRows" : 12,
-		"cellSize" : 0.7
+		"numCols" : 10,
+		"numRows" : 10,
+		"cellSize" : 1.0,
+		"orientation" : "pointy"
 	}
 }

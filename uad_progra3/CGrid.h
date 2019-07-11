@@ -16,6 +16,7 @@ public:
 	int m_rows;
 	int m_columns;
 	float m_sizeHex = 0.5;
+	string m_orientation;
 
 	const int m_numFaces = 4;
 

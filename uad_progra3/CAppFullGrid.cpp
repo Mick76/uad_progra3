@@ -546,4 +546,5 @@ void CAppFullGrid::loadMap(string path)
 	m_grid->m_columns = j["HexGrid"]["numCols"];
 	m_grid->m_rows = j["HexGrid"]["numRows"];
 	m_grid->m_sizeHex = j["HexGrid"]["cellSize"];
+	m_grid->m_orientation = j["HexGrid"]["orientation"].get<string>();
 }

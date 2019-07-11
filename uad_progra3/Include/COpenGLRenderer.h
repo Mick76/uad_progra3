@@ -224,12 +224,12 @@ public:
 
 	//
 	void renderColorCube(MathHelper::Matrix4 *objectTransformation = NULL);
-	void renderColorCubeDLL(MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//DLL
+	//void renderColorCubeDLL(MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//DLL
 	void initializeColorCube();
 
 	//
 	void renderTexturedCube(unsigned int cubeTextureID, MathHelper::Matrix4 *objectTransformation = NULL);
-	void renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//dll
+	//void renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//dll
 	void initializeTexturedCube();
 
 	//
