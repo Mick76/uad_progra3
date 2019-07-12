@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Progra3MathDLL", "Progra3MathDLL\Progra3MathDLL.vcxproj", "{78C10F22-51BF-4235-998F-37DF6E94CA05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48B7DCBD-A08F-4960-85EA-7A74D6DAE58D}"
+	ProjectSection(SolutionItems) = preProject
+		x64\Debug\Progra3MathDLL.lib = x64\Debug\Progra3MathDLL.lib
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Debug|x64.ActiveCfg = Debug|x64
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Debug|x64.Build.0 = Debug|x64
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Debug|x86.ActiveCfg = Debug|Win32
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Debug|x86.Build.0 = Debug|Win32
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Release|x64.ActiveCfg = Release|x64
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Release|x64.Build.0 = Release|x64
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Release|x86.ActiveCfg = Release|Win32
+		{78C10F22-51BF-4235-998F-37DF6E94CA05}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80D35EB7-40B9-4CA7-B9A9-BCE2D59A79C4}
+	EndGlobalSection
+EndGlobal

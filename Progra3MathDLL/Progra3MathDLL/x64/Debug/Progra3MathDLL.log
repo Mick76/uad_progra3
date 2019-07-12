@@ -1,0 +1,5 @@
+﻿  Source.cpp
+d:\visual_studio_projects\progra3mathdll\progra3mathdll\source.cpp(1): warning C4603: 'CREATING_DLL': macro is not defined or definition is different after precompiled header use
+  d:\visual_studio_projects\progra3mathdll\progra3mathdll\source.cpp(1): note: Add macro to precompiled header instead of defining here
+  d:\visual_studio_projects\progra3mathdll\progra3mathdll\source.cpp(2): note: use of precompiled header
+  Progra3MathDLL.vcxproj -> D:\Visual_Studio_Projects\Progra3MathDLL\x64\Debug\Progra3MathDLL.dll
