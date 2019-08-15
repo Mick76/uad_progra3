@@ -159,8 +159,8 @@ void Esfera::run()
 			getOpenGLRenderer()->setClearScreenColor(0.0f, 0.0f, 0.0f);
 
 			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+			//getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+			//getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 
 			if (m_initialized)
 			{
@@ -236,8 +236,8 @@ void Esfera::render()
 		double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
 		// Get a matrix that has both the object rotation and translation
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
-
+		//MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition); FIX
+		/*
 		if (m_sphereVertexArrayObject > 0 && m_numFacesSphere > 0)
 		{
 
@@ -253,6 +253,7 @@ void Esfera::render()
 				false
 			);
 		}
+		*/
 
 	}
 }

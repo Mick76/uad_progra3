@@ -20,7 +20,7 @@ public:
 
 	const int m_numFaces = 4;
 
-	vector<CGridCell> m_cells;
+	vector<CGridCell*> m_cells;
 
 	float vData[18] = {
 	   m_sizeHex * cosf(M_PI / 180 * (60 * 0 - 30)), 0, m_sizeHex * sinf(M_PI / 180 * (60 * 0 - 30)),

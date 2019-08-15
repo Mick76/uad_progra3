@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "CApp.h"
 #include "CVector3.h"
+#include "../CCamera.h"
 
 /* ******************************************************************************************************************************************
  * This class shows an example of how to display two cubes on screen, one of them has a texture, and the other one has colours only
@@ -35,6 +36,8 @@ private:
 
 	// Current object position
 	CVector3 m_objectPosition;
+
+	CCamera * m_camera;
 
 	// -----------------------------------------------------------------
 	
@@ -71,6 +74,11 @@ public:
 
 	// Called when mouse moves within the window
 	void onMouseMove(float deltaX, float deltaY);
+
+	void onArrowUp(int mods);
+	void onArrowDown(int mods);
+	void onArrowLeft(int mods);
+	void onArrowRight(int mods);
 
 private:
 

@@ -155,8 +155,8 @@ void CAppGeometricFigures::run()
 			getOpenGLRenderer()->setClearScreenColor(0.25f, 0.0f, 0.75f);
 
 			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+			//getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+			//getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 
 			if (m_initialized)
 			{
@@ -232,14 +232,15 @@ void CAppGeometricFigures::render()
 		double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
 		// Get a matrix that has both the object rotation and translation
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+		MathHelper::Matrix4 modelMatrix = MathHelper::SimpleModelMatrixRotationTranslation((float)totalDegreesRotatedRadians, m_objectPosition);
 
 		if (m_pyramidVertexArrayObject > 0 && m_numFacesPyramid > 0)
 		{
 			CVector3 pos2 = m_objectPosition;
 			pos2 += CVector3(3.0f, 0.0f, 0.0f);
-			MathHelper::Matrix4 modelMatrix2 = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, pos2);
+			MathHelper::Matrix4 modelMatrix2 = MathHelper::SimpleModelMatrixRotationTranslation((float)totalDegreesRotatedRadians, pos2);
 
+			
 			// Render pyramid in the first position, using the color shader
 			getOpenGLRenderer()->renderObject(
 				&m_colorModelShaderId,
@@ -251,7 +252,9 @@ void CAppGeometricFigures::render()
 				COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
 				false
 			);
+			
 
+			
 			// Render same pyramid (same vertex array object identifier), in a second position, but this time with a texture
 			getOpenGLRenderer()->renderObject(
 				&m_texturedModelShaderId,
@@ -263,6 +266,7 @@ void CAppGeometricFigures::render()
 				COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
 				false
 			);
+			
 		}
 
 		// =================================

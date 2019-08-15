@@ -9,6 +9,7 @@
 #include "CGrid.h"
 #include "../C3DModel_Obj.h"
 #include "CObjectInstance.h"
+#include "Quadtree.h"
 
 //poner esto en el archivo que lea el json. ej. HexWorld
 #include "nlohmann/json.hpp"
@@ -78,6 +79,9 @@ public:
 	vector<C3DModel*> m_gameobjects;
 	vector<CObjectInstance> m_objInstances;
 	CAppObjLoader *m_objLoader;
+	CCamera *m_camera;
+
+	Quadtree<CGridCell> *quadtree;
 
 	// --------------------------------------------------------------------------------------------------------------------------
 	// Inherited methods from CApp

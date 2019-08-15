@@ -154,9 +154,16 @@ void CAppFullGrid::initialize()
 
 	m_initialized = true;
 	m_grid = new CGrid(0, 0, 0);
-	onF2(0);//laod map on start
+	onF2(0);//load map on start
 	m_grid->initialize();
 	createHexGeometry();
+	quadtree = new Quadtree<CGridCell>(6, m_grid->m_cells);
+
+	m_camera = new CCamera();
+	m_camera->m_pos.Y = 10.0f;
+	m_camera->m_pos.Z = 8.0f;
+	m_camera->m_upVec.Y = 1.0f;
+	m_camera->m_rightVec.X = 1;
 }
 
 /* */
@@ -175,8 +182,8 @@ void CAppFullGrid::run()
 			getOpenGLRenderer()->setClearScreenColor(1.0f, 1.0f, 1.0f);
 
 			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+			//getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+			//getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 
 			if (m_initialized)
 			{
@@ -231,14 +238,96 @@ void CAppFullGrid::render()
 		// convert total degrees rotated to radians;
 		double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
+		// Construct a view matrix
+		m_camera->m_viewMatrix = MathHelper::ViewMatrix(
+			m_camera->m_pos, m_camera->m_lookAt, m_camera->m_upVec
+		);
+
+		int tmpW = getOpenGLRenderer()->getFramebufferWidth();
+		int tmpH = getOpenGLRenderer()->getFramebufferHeight();
+		float aspectRatio = (float)getOpenGLRenderer()->getFramebufferWidth() / (float)getOpenGLRenderer()->getFramebufferHeight();
+
+		// Construct a projection matrix
+		m_camera->m_projMatrix = MathHelper::PerspectiveProjectionMatrix(
+			75.0f, aspectRatio, 0.1f, 100.0f
+		);
+
+
+		m_camera->m_frustum.update(m_camera->m_pos, m_camera->m_lookAt, m_camera->m_upVec, m_camera->m_rightVec, 1, 400, 60, aspectRatio);
+
 		// Get a matrix that has both the object rotation and translation
 
+		vector <CGridCell*> visibleObjects;
+
+		quadtree->render(m_camera, &visibleObjects);
+
+		if (m_VertexArrayObject > 0 && m_numFaces > 0)
+		{
+			for (int i = 0; i < visibleObjects.size(); i++)
+			{
+				m_objectPosition = visibleObjects[i]->m_cellPosition;
+				MathHelper::Matrix4 modelMatrix = MathHelper::SimpleModelMatrixRotationTranslation((float)totalDegreesRotatedRadians, m_objectPosition);
+
+				if (visibleObjects[i] == m_grid->getFromCoords(currentX, currentY))
+				{
+					color[0] = 1;
+					color[1] = 0;
+					color[2] = 0;
+				}
+				else
+				{
+					color[0] = 1;
+					color[1] = 1;
+					color[2] = 1;
+				}
+
+				getOpenGLRenderer()->renderObjectCamera(
+					&m_camera->m_viewMatrix,
+					&m_camera->m_projMatrix,
+					&m_colorModelShaderId,
+					&m_VertexArrayObject,
+					&noTexture,
+					m_numFaces,
+					color,
+					&modelMatrix,
+					COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
+					false
+				);
+
+
+				if (visibleObjects[i]->m_hasModel)
+				{
+					float scale = m_objInstances[visibleObjects[i]->m_index].m_scale;
+
+					MathHelper::Matrix4 scaleMatrix(
+						scale, 0.0f, 0.0f, 0.0f,
+						0.0f, scale, 0.0f, 0.0f,
+						0.0f, 0.0f, scale, 0.0f,
+						m_objectPosition.getX(), m_objectPosition.getY(), m_objectPosition.getZ(), 1.0f);
+
+					getOpenGLRenderer()->renderObjectCamera(
+						&m_camera->m_viewMatrix,
+						&m_camera->m_projMatrix,
+						&m_colorModelShaderId,
+						m_gameobjects[m_objInstances[visibleObjects[i]->m_index].m_objectIndex]->getGraphicsMemoryObjectId(),
+						&noTexture,
+						m_gameobjects[m_objInstances[visibleObjects[i]->m_index].m_objectIndex]->getNumFaces(),
+						color,
+						&scaleMatrix,
+						COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
+						false
+					);
+				}
+			}
+		}
+
+		/*
 		if (m_VertexArrayObject > 0 && m_numFaces > 0)
 		{
 			for (int i = 0; i < m_grid->m_cells.size(); i++)
 			{
-				m_objectPosition = m_grid->m_cells[i].m_cellPosition;
-				MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+				m_objectPosition = m_grid->m_cells[i]->m_cellPosition;
+				MathHelper::Matrix4 modelMatrix = MathHelper::SimpleModelMatrixRotationTranslation((float)totalDegreesRotatedRadians, m_objectPosition);
 
 				if (i == currentX + ((currentY)*m_grid->m_rows))
 				{
@@ -252,8 +341,10 @@ void CAppFullGrid::render()
 					color[1] = 1;
 					color[2] = 1;
 				}
-
-				getOpenGLRenderer()->renderObject(
+				
+				getOpenGLRenderer()->renderObjectCamera(
+					&m_camera->m_viewMatrix,
+					&m_camera->m_projMatrix,
 					&m_colorModelShaderId,
 					&m_VertexArrayObject,
 					&noTexture,
@@ -263,10 +354,11 @@ void CAppFullGrid::render()
 					COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
 					false
 				);
+				
 
-				if (m_grid->m_cells[i].m_hasModel)
+				if (m_grid->m_cells[i]->m_hasModel)
 				{
-					float scale = m_objInstances[m_grid->m_cells[i].m_index].m_scale;
+					float scale = m_objInstances[m_grid->m_cells[i]->m_index].m_scale;
 
 					MathHelper::Matrix4 scaleMatrix(
 						scale, 0.0f, 0.0f, 0.0f,
@@ -274,11 +366,13 @@ void CAppFullGrid::render()
 						0.0f, 0.0f, scale, 0.0f,
 						m_objectPosition.getX(), m_objectPosition.getY(), m_objectPosition.getZ(), 1.0f);
 
-					getOpenGLRenderer()->renderObject(
+					getOpenGLRenderer()->renderObjectCamera(
+						&m_camera->m_viewMatrix,
+						&m_camera->m_projMatrix,
 						&m_colorModelShaderId,
-						m_gameobjects[m_objInstances[m_grid->m_cells[i].m_index].m_objectIndex]->getGraphicsMemoryObjectId(),
+						m_gameobjects[m_objInstances[m_grid->m_cells[i]->m_index].m_objectIndex]->getGraphicsMemoryObjectId(),
 						&noTexture,
-						m_gameobjects[m_objInstances[m_grid->m_cells[i].m_index].m_objectIndex]->getNumFaces(),
+						m_gameobjects[m_objInstances[m_grid->m_cells[i]->m_index].m_objectIndex]->getNumFaces(),
 						color,
 						&scaleMatrix,
 						COpenGLRenderer::EPRIMITIVE_MODE::TRIANGLES,
@@ -287,6 +381,7 @@ void CAppFullGrid::render()
 				}
 			}
 		}
+		*/
 
 	}
 }
@@ -477,41 +572,74 @@ void CAppFullGrid::onF7(int mods)
 
 void CAppFullGrid::onArrowUp(int mods)
 {
-	if (currentX + ((currentY - 1)*m_grid->m_rows) >= 0)
+	if (mods & KEY_MOD_SHIFT)
 	{
-		currentY--;
+		if (currentX + ((currentY - 1)*m_grid->m_rows) >= 0)
+		{
+			currentY--;
+		}
+		Sleep(50);
 	}
-	Sleep(50);
+	else
+	{
+		m_camera->m_pos.Z -= 1;
+		m_camera->m_lookAt.Z -= 1;
+	}
 }
 
 void CAppFullGrid::onArrowDown(int mods)
 {
-	if (currentX + ((currentY + 1)*m_grid->m_rows) <= m_grid->m_cells.size() - 1)
+	if (mods & KEY_MOD_SHIFT)
 	{
-		currentY++;
+		if (currentX + ((currentY + 1)*m_grid->m_rows) <= m_grid->m_cells.size() - 1)
+		{
+			currentY++;
+		}
+		Sleep(50);
 	}
-	Sleep(50);
+	else
+	{
+		m_camera->m_pos.Z += 1;
+		m_camera->m_lookAt.Z += 1;
+	}
 }
 
 void CAppFullGrid::onArrowLeft(int mods)
 {
-	if (currentX - 1 >= 0)
+	if (mods & KEY_MOD_SHIFT)
 	{
-		currentX--;
+		if (currentX - 1 >= 0)
+		{
+			currentX--;
+		}
+		Sleep(50);
 	}
-	Sleep(50);
+	else
+	{
+		m_camera->m_pos.X -= 1;
+		m_camera->m_lookAt.X -= 1;
+	}
 }
 void CAppFullGrid::onArrowRight(int mods)
 {
-	if (currentX + 1 <= m_grid->m_rows - 1)
+	if (mods & KEY_MOD_SHIFT)
 	{
-		currentX++;
+		if (currentX + 1 <= m_grid->m_rows - 1)
+		{
+			currentX++;
+		}
+		Sleep(50);
 	}
-	Sleep(50);
+	else
+	{
+		m_camera->m_pos.X += 1;
+		m_camera->m_lookAt.X += 1;
+	}
 }
 
 void CAppFullGrid::onMouseMove(float deltaX, float deltaY)
 {
+	/*
 	if (deltaX < 100.0f && deltaY < 100.0f)
 	{
 		float moveX = -deltaX * DEFAULT_CAMERA_MOVE_SPEED;
@@ -520,12 +648,13 @@ void CAppFullGrid::onMouseMove(float deltaX, float deltaY)
 		float currPos[3];
 		for (int i = 0; i < m_grid->m_cells.size(); i++)
 		{
-			m_grid->m_cells[i].m_cellPosition.getValues(currPos);
+			m_grid->m_cells[i]->m_cellPosition.getValues(currPos);
 			currPos[0] += moveX;
 			currPos[2] += moveZ;
-			m_grid->m_cells[i].m_cellPosition.setValues(currPos);
+			m_grid->m_cells[i]->m_cellPosition.setValues(currPos);
 		}
 	}
+	*/
 }
 
 void CAppFullGrid::moveCamera(float direction)

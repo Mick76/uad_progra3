@@ -12,8 +12,8 @@ using namespace std;
 #include "../Include/C3DModel.h"
 #include "../Include/CWideStringHelper.h"
 
-#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\CVector3DLL.h"
-#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\MathHelperDLL.h"
+//#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\CVector3DLL.h"
+//#include "D:\Visual_Studio_Projects\Progra3MathDLL\Progra3MathDLL\MathHelperDLL.h"
 
 /* */
 CAppCubeTest::CAppCubeTest() :
@@ -59,8 +59,8 @@ void CAppCubeTest::run()
 			// Set initial clear screen color
 			getOpenGLRenderer()->setClearScreenColor(0.15f, 0.75f, 0.75f);
 			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+			//getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+			//getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 			// Initialize a test cube
 			getOpenGLRenderer()->initializeColorCube();
 
@@ -70,6 +70,15 @@ void CAppCubeTest::run()
 				return;
 			}
 
+			m_camera = new CCamera();
+			m_camera->m_pos = CVector3::ZeroVector();
+			m_camera->m_lookAt = CVector3(0,0,0);
+			m_camera->m_upVec = CVector3::ZeroVector();
+			m_camera->m_rightVec = CVector3::ZeroVector();
+			m_camera->m_pos.Y = 8.0f;
+			m_camera->m_pos.Z = 8.0f;
+			m_camera->m_upVec.Y = 1.0f;
+			m_camera->m_rightVec.X = 1;
 			// Enter main loop
 			cout << "Entering Main loop" << endl;
 			getGameWindow()->mainLoop(this);
@@ -142,45 +151,54 @@ void CAppCubeTest::update(double deltaTime)
 /* */
 void CAppCubeTest::render()
 {
-	/*
-	//HINSTANCE hInst = LoadLibrary(L"D:\\Visual_Studio_Projects\\Progra3MathDLL\\Debug\\Progra3MathDLL.dll");
-	//f_indetityMatrix fptr = (f_indetityMatrix)GetProcAddress(hInst, "MathHelperDLL::Matrix4DLL::IdentityMatrix");
-
-	CVector3DLL objPos2;
+	CVector3 objPos2;
 	objPos2.setValues(m_objectPosition.getX() + 2.5f, m_objectPosition.getY(), m_objectPosition.getZ());
 
 	// convert total degrees rotated to radians;
 	double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
-	MathHelperDLL::Matrix4DLL sc = MathHelperDLL::IdentityMatrix();
-	sc.m[0][0] = 0.25f;
-	sc.m[1][1] = 0.25f;
-	sc.m[2][2] = 0.25f;
+	float cosine = cosf((float)totalDegreesRotatedRadians);
+	float sine = sinf((float)totalDegreesRotatedRadians);
 
-	MathHelperDLL::Matrix4DLL tr = MathHelperDLL::IdentityMatrix();
-	sc.m[3][0] = m_objectPosition.X;
-	sc.m[3][1] = m_objectPosition.Y;
-	sc.m[3][2] = m_objectPosition.Z;
+	MathHelper::Matrix4 sm = MathHelper::ScaleMatrix(
+		0.5f, 0.5f, 0.5f
+	);
 
-	MathHelperDLL::Matrix4DLL rx = MathHelperDLL::IdentityMatrix();
-	float cosine = cosf(totalDegreesRotatedRadians);
-	float sine = sinf(totalDegreesRotatedRadians);
+	MathHelper::Matrix4 tm = MathHelper::TranslationMatrix(
+		m_objectPosition.X, m_objectPosition.Y, m_objectPosition.Z
+	);
 
-	sc.m[3][0] = m_objectPosition.X;
-	sc.m[3][1] = m_objectPosition.Y;
-	sc.m[3][2] = m_objectPosition.Z;
+	MathHelper::Matrix4 rx = MathHelper::RotAroundX((float)totalDegreesRotatedRadians);
+	MathHelper::Matrix4 ry = MathHelper::RotAroundY((float)totalDegreesRotatedRadians);
 
-	// Get a matrix that has both the object rotation and translation
-	MathHelperDLL::Matrix4DLL modelMatrix = MathHelperDLL::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+	MathHelper::Matrix4 finalRotation = MathHelper::Multiply(rx, ry);
+	MathHelper::Matrix4 rotationAndScale = MathHelper::Multiply(finalRotation, sm);
+	MathHelper::Matrix4 modelMatrix = MathHelper::Multiply(rotationAndScale, tm);
 
-	CVector3DLL pos2 = m_objectPosition;
-	pos2 += CVector3DLL(3.0f, 0.0f, 0.0f);
-	MathHelperDLL::Matrix4DLL modelMatrix2 = MathHelperDLL::ModelMatrix((float)totalDegreesRotatedRadians, pos2);
+	CVector3 pos2 = m_objectPosition;
+	pos2 += CVector3(3.0f, 0.0f, 0.0f);
+	MathHelper::Matrix4 modelMatrix2 = MathHelper::SimpleModelMatrixRotationTranslation((float)totalDegreesRotatedRadians, pos2);
+
+	// Look at 0,0,0 from 0,8,8
+	
+
+	// Construct a view matrix
+	m_camera->m_viewMatrix = MathHelper::ViewMatrix(
+		m_camera->m_pos, m_camera->m_lookAt, m_camera->m_upVec
+	);
+
+	int tmpW = getOpenGLRenderer()->getFramebufferWidth();
+	int tmpH = getOpenGLRenderer()->getFramebufferHeight();
+	float aspectRatio = (float)getOpenGLRenderer()->getFramebufferWidth() / (float)getOpenGLRenderer()->getFramebufferHeight();
+
+	// Construct a projection matrix
+	m_camera->m_projMatrix = MathHelper::PerspectiveProjectionMatrix(
+		75.0f, aspectRatio, 0.1f, 100.0f
+	);
 
 	// No model loaded, show test cubes
-	getOpenGLRenderer()->renderColorCubeDLL(&modelMatrix);
-	getOpenGLRenderer()->renderTexturedCubeDLL(m_texturedCubeTextureID, &modelMatrix2);
-	*/
+	getOpenGLRenderer()->renderColorCube(&modelMatrix, &m_camera->m_viewMatrix, &m_camera->m_projMatrix);
+	getOpenGLRenderer()->renderTexturedCube(m_texturedCubeTextureID, &modelMatrix2, &m_camera->m_viewMatrix, &m_camera->m_projMatrix);
 }
 
 /*
@@ -201,5 +219,29 @@ void CAppCubeTest::onMouseMove(float deltaX, float deltaY)
 		currPos[2] += moveZ;
 		m_objectPosition.setValues(currPos);
 	}
+}
+
+void CAppCubeTest::onArrowUp(int mods)
+{
+	m_camera->m_pos.Z -= 1;
+	m_camera->m_lookAt.Z -= 1;
+}
+
+void CAppCubeTest::onArrowDown(int mods)
+{
+	m_camera->m_pos.Z += 1;
+	m_camera->m_lookAt.Z += 1;
+}
+
+void CAppCubeTest::onArrowLeft(int mods)
+{
+	m_camera->m_pos.X -= 1;
+	m_camera->m_lookAt.X -= 1;
+}
+
+void CAppCubeTest::onArrowRight(int mods)
+{
+	m_camera->m_pos.X += 1;
+	m_camera->m_lookAt.X += 1;
 }
 

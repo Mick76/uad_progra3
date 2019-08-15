@@ -159,8 +159,8 @@ void Torus::run()
 			getOpenGLRenderer()->setClearScreenColor(0.0f, 0.0f, 0.0f);
 
 			// Initialize window width/height in the renderer
-			getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
-			getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
+			//getOpenGLRenderer()->setWindowWidth(getGameWindow()->getWidth());
+			//getOpenGLRenderer()->setWindowHeight(getGameWindow()->getHeight());
 
 			if (m_initialized)
 			{
@@ -236,8 +236,8 @@ void Torus::render()
 		double totalDegreesRotatedRadians = m_objectRotation * 3.1459 / 180.0;
 
 		// Get a matrix that has both the object rotation and translation
-		MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
-
+		//MathHelper::Matrix4 modelMatrix = MathHelper::ModelMatrix((float)totalDegreesRotatedRadians, m_objectPosition);
+		/*
 		if (m_torusVertexArrayObject > 0 && m_numFacesTorus > 0)
 		{
 
@@ -253,6 +253,7 @@ void Torus::render()
 				false
 			);
 		}
+		*/
 
 	}
 }

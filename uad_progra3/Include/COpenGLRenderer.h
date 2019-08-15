@@ -50,8 +50,8 @@ public:
 	};
 
 private:
-	int m_windowWidth;
-	int m_windowHeight;
+	int m_frameBufferWidth;
+	int m_frameBufferHeight;
 	bool m_OpenGLError;
 
 	std::map<int, COpenGLShaderProgram*> m_shaderProgramWrappers;
@@ -198,6 +198,19 @@ public:
 		EPRIMITIVE_MODE mode = TRIANGLES,
 		bool drawIndexedPrimitives = false);
 
+	bool renderObjectCamera(
+		MathHelper::Matrix4 *viewMatrix,
+		MathHelper::Matrix4 *projectionMatrix,
+		unsigned int *shaderProgramId,
+		unsigned int *vertexArrayObjectId,
+		unsigned int *textureObjectId,
+		int numFaces,
+		GLfloat *objectColor,
+		MathHelper::Matrix4 *objectTransformation = NULL,
+		EPRIMITIVE_MODE mode = TRIANGLES,
+		bool drawIndexedPrimitives = false
+		);
+
 
 	// 
 	bool renderObjectSection(
@@ -219,17 +232,30 @@ public:
 		GLfloat *menuItemColor);
 
 	//
-	void setWindowWidth(int width) { m_windowWidth = width; }
-	void setWindowHeight(int height) { m_windowHeight = height; }
+	void setFramebufferWidth(int width) { m_frameBufferWidth = width; }
+	void setFramebufferHeight(int height) { m_frameBufferHeight = height; }
+	int getFramebufferWidth() const { return m_frameBufferWidth; }
+	int getFramebufferHeight() const { return m_frameBufferHeight; }
 
 	//
 	void renderColorCube(MathHelper::Matrix4 *objectTransformation = NULL);
 	//void renderColorCubeDLL(MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//DLL
-	void initializeColorCube();
+	void renderColorCube(
+			MathHelper::Matrix4 *modelMatrix,
+			MathHelper::Matrix4 *viewMatrix,
+			MathHelper::Matrix4 *projectionMatrix );
 
+	//
+	void initializeColorCube();
 	//
 	void renderTexturedCube(unsigned int cubeTextureID, MathHelper::Matrix4 *objectTransformation = NULL);
 	//void renderTexturedCubeDLL(unsigned int cubeTextureID, MathHelperDLL::Matrix4DLL *objectTransformation = NULL);//dll
+	void renderTexturedCube(
+		unsigned int cubeTextureID,
+		MathHelper::Matrix4 *modelMatrix,
+		MathHelper::Matrix4 *viewMatrix,
+		MathHelper::Matrix4 *projectionMatrix);
+
 	void initializeTexturedCube();
 
 	//

@@ -165,10 +165,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="CAppFullGrid.h" />
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGrid.h" />
     <ClInclude Include="CGridCell.h" />
     <ClInclude Include="CObjectInstance.h" />
+    <ClInclude Include="CPlane.h" />
     <ClInclude Include="Esfera.h" />
     <ClInclude Include="Icosaedro.h" />
     <ClInclude Include="Include\C3DModel.h" />
@@ -194,15 +198,21 @@
     <ClInclude Include="Include\LoadShaders.h" />
     <ClInclude Include="Include\LoadTGA.h" />
     <ClInclude Include="Include\MathHelper.h" />
+    <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="QuadtreeNode.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Torus.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="CAppFullGrid.cpp" />
+    <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGrid.cpp" />
     <ClCompile Include="CGridCell.cpp" />
     <ClCompile Include="CObjectInstance.cpp" />
+    <ClCompile Include="CPlane.cpp" />
     <ClCompile Include="Dependencies\GLAD\glad-4.3-core\src\glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -211,6 +221,8 @@
     </ClCompile>
     <ClCompile Include="Esfera.cpp" />
     <ClCompile Include="Icosaedro.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="QuadtreeNode.cpp" />
     <ClCompile Include="Source\C3DModel.cpp" />
     <ClCompile Include="Source\C3DModel_Obj.cpp" />
     <ClCompile Include="Source\CApp.cpp" />
